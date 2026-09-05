@@ -1,0 +1,222 @@
+{
+  "TmaxRelDiff": 0.0,
+  "bounds": {
+    "mpi2": {
+      "maxY": 1.0,
+      "minY": 0.0
+    },
+    "serial": {
+      "maxY": 1.00000000008,
+      "minY": 0.0
+    }
+  },
+  "cellCentres": {
+    "maxAbs": 0.0,
+    "nrmse": 0.0,
+    "referenceScale": 0.012997692343258475
+  },
+  "fields": {
+    "T": {
+      "maxAbs": 0.015325339999890275,
+      "nrmse": 1.0913401275565099e-07,
+      "referenceScale": 4999.95891487
+    },
+    "U": {
+      "maxAbs": 6.811999992351048e-05,
+      "nrmse": 1.2330341953664975e-09,
+      "referenceScale": 1701.52861329
+    },
+    "p": {
+      "maxAbs": 1.7650200000498444,
+      "nrmse": 4.4129483056677307e-08,
+      "referenceScale": 1411814.04633
+    }
+  },
+  "finalTime": {
+    "mpi2": 2e-10,
+    "serial": 2e-10
+  },
+  "maxSumYError": {
+    "mpi2": 6.167237831533612e-10,
+    "serial": 6.167237831533612e-10
+  },
+  "pmaxRelDiff": 0.0,
+  "rawCellOrdering": {
+    "maxAbs": 0.005925000000000001,
+    "nrmse": 0.026407210115293935,
+    "permuted": true
+  },
+  "redistributions": 3,
+  "shockAbsDiff": 0.0,
+  "shockMPI2": 0.0102525,
+  "shockSerial": 0.0102525,
+  "species": {
+    "AR": {
+      "maxAbs": 1.489851575438e-10,
+      "nrmse": 0.005963271082592564,
+      "referenceScale": 6.293940924e-10
+    },
+    "H": {
+      "maxAbs": 1.1531120000015805e-14,
+      "nrmse": 1.9767627065213533e-06,
+      "referenceScale": 2.13471987076e-10
+    },
+    "H2": {
+      "maxAbs": 4.679512999993668e-07,
+      "nrmse": 7.723788530357558e-07,
+      "referenceScale": 0.02210881
+    },
+    "H2NN": {
+      "maxAbs": 3.1750994000000836e-24,
+      "nrmse": 4.1234659996069885e-06,
+      "referenceScale": 2.60637063929e-20
+    },
+    "H2NO": {
+      "maxAbs": 5.0581538999954566e-18,
+      "nrmse": 2.403555182169039e-06,
+      "referenceScale": 6.9542839931e-14
+    },
+    "H2O": {
+      "maxAbs": 3.6253189999993655e-18,
+      "nrmse": 8.672652948969108e-07,
+      "referenceScale": 1.37630380931e-13
+    },
+    "H2O2": {
+      "maxAbs": 1.1499765999989757e-16,
+      "nrmse": 1.923151042237519e-06,
+      "referenceScale": 1.90546938447e-12
+    },
+    "HE": {
+      "maxAbs": 0.0,
+      "nrmse": 0.0,
+      "referenceScale": 1e-30
+    },
+    "HNO": {
+      "maxAbs": 9.836541000000325e-19,
+      "nrmse": 2.429962707402673e-06,
+      "referenceScale": 1.34426227794e-14
+    },
+    "HNO2": {
+      "maxAbs": 1.872133300001405e-34,
+      "nrmse": 4.541249408245777e-06,
+      "referenceScale": 1.26252791541e-30
+    },
+    "HNO3": {
+      "maxAbs": 1.8796050999967735e-35,
+      "nrmse": 5.361824987073229e-07,
+      "referenceScale": 1e-30
+    },
+    "HNOH": {
+      "maxAbs": 1.2228158000010107e-21,
+      "nrmse": 4.19487415622638e-06,
+      "referenceScale": 1.0751789998e-17
+    },
+    "HO2": {
+      "maxAbs": 2.2020261000038833e-12,
+      "nrmse": 1.8016278200870015e-06,
+      "referenceScale": 4.30130570494e-08
+    },
+    "HON": {
+      "maxAbs": 8.523001099999048e-33,
+      "nrmse": 6.597801777426568e-06,
+      "referenceScale": 4.63342451621e-29
+    },
+    "HONO": {
+      "maxAbs": 1.5969340000013317e-32,
+      "nrmse": 3.968692987622372e-06,
+      "referenceScale": 1.20922427998e-28
+    },
+    "HONO2": {
+      "maxAbs": 0.0,
+      "nrmse": 0.0,
+      "referenceScale": 1e-30
+    },
+    "N": {
+      "maxAbs": 1.2216708799998343e-13,
+      "nrmse": 8.653381247383606e-06,
+      "referenceScale": 5.80221346841e-10
+    },
+    "N2": {
+      "maxAbs": 1.900082200001485e-05,
+      "nrmse": 6.933703558425115e-07,
+      "referenceScale": 1.00000000008
+    },
+    "N2H2": {
+      "maxAbs": 8.195231399999619e-21,
+      "nrmse": 4.882992687821187e-06,
+      "referenceScale": 6.61240044677e-17
+    },
+    "N2H3": {
+      "maxAbs": 2.62080130000006e-17,
+      "nrmse": 1.8681170687431867e-06,
+      "referenceScale": 4.45362446488e-13
+    },
+    "N2H4": {
+      "maxAbs": 7.987008999994339e-22,
+      "nrmse": 2.3098985136472294e-06,
+      "referenceScale": 1.05473718358e-17
+    },
+    "N2O": {
+      "maxAbs": 8.673269700002907e-19,
+      "nrmse": 3.6364420181977256e-06,
+      "referenceScale": 8.24292830088e-15
+    },
+    "NH": {
+      "maxAbs": 8.611567900002049e-21,
+      "nrmse": 6.885299604543259e-06,
+      "referenceScale": 4.44101173541e-17
+    },
+    "NH2": {
+      "maxAbs": 9.161140000012934e-13,
+      "nrmse": 1.833461720376786e-06,
+      "referenceScale": 1.77097169385e-08
+    },
+    "NH2OH": {
+      "maxAbs": 1.1872598000003009e-23,
+      "nrmse": 3.7635366135730108e-06,
+      "referenceScale": 1.04798799926e-19
+    },
+    "NH3": {
+      "maxAbs": 6.150626000012149e-06,
+      "nrmse": 7.723919183324769e-07,
+      "referenceScale": 0.29058564
+    },
+    "NNH": {
+      "maxAbs": 8.026645000002433e-18,
+      "nrmse": 3.423871475580542e-06,
+      "referenceScale": 8.81502313486e-14
+    },
+    "NO": {
+      "maxAbs": 2.821799400000874e-22,
+      "nrmse": 2.0030680406983084e-06,
+      "referenceScale": 4.23704752576e-18
+    },
+    "NO2": {
+      "maxAbs": 1.0686628000004188e-27,
+      "nrmse": 2.808700111783562e-06,
+      "referenceScale": 1.13100580759e-23
+    },
+    "NO3": {
+      "maxAbs": 2.456159599999519e-39,
+      "nrmse": 7.804103167478867e-11,
+      "referenceScale": 1e-30
+    },
+    "O": {
+      "maxAbs": 3.824056900003611e-16,
+      "nrmse": 1.4362995871306796e-06,
+      "referenceScale": 8.3022049945e-12
+    },
+    "O2": {
+      "maxAbs": 1.2382190000048698e-05,
+      "nrmse": 7.723978530355852e-07,
+      "referenceScale": 0.58499123
+    },
+    "OH": {
+      "maxAbs": 4.0374746000018377e-16,
+      "nrmse": 1.437620141536809e-06,
+      "referenceScale": 8.74884091551e-12
+    }
+  },
+  "speciesCount": 33,
+  "stage": "D3-C"
+}

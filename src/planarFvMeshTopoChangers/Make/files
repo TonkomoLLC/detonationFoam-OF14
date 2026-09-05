@@ -1,0 +1,5 @@
+planarRefiner/planarRefinementIterator.C
+planarRefiner/planarMultiDirRefinement.C
+planarRefiner/planarRefiner.C
+
+LIB = $(FOAM_USER_LIBBIN)/libplanarFvMeshTopoChangers

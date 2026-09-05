@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT"
+BUDGET="${RELEASE_MAX_SECONDS:-900}"
+START="$(date +%s)"
+RESULT="$ROOT/detonationFoam_OF14_v1.0.0_qualification_result.tar.xz"
+LOGS=()
+
+remaining(){
+    local now elapsed rem
+    now=$(date +%s); elapsed=$((now-START)); rem=$((BUDGET-elapsed))
+    (( rem > 0 )) || rem=0
+    printf '%d' "$rem"
+}
+run_step(){
+    local label="$1" log="$2"; shift 2
+    local rem; rem=$(remaining)
+    echo "--- release step: $label (remaining budget ${rem}s)"
+    (( rem > 0 )) || { echo "ERROR: release wall-time budget exhausted before: $label" >&2; return 124; }
+    LOGS+=("$log")
+    timeout --preserve-status "${rem}s" "$@" >"$log" 2>&1 || {
+        local rc=$?
+        echo "ERROR: release step failed: $label (rc=$rc)" >&2
+        tail -80 "$log" >&2 || true
+        return "$rc"
+    }
+}
+collect(){
+    local rc=$?
+    local files=(VERSION README.md RELEASE_NOTES.md RELEASE_MANIFEST.md QUALIFICATION_SUMMARY.md GATE_R1_STATUS.md)
+    for f in "${LOGS[@]:-}"; do [[ -f "$f" ]] && files+=("$f"); done
+    [[ -f _Release_fastSmoke/log.foamRun ]] && files+=("_Release_fastSmoke/log.foamRun")
+    rm -f "$RESULT"
+    tar -cJf "$RESULT" "${files[@]}" 2>/dev/null || true
+    if [[ -f "$RESULT" ]]; then
+        echo "Result bundle: $RESULT"
+        sha256sum "$RESULT"
+    fi
+    exit "$rc"
+}
+trap collect EXIT
+
+cat <<HDR
+======================================================================
+OpenFOAM 14 detonationFoam v1.0.0 compact release qualification
+Hard wall-time budget: ${BUDGET} s
+Scope: frozen release audit; standalone AMR build; full solver build; fast foamRun smoke
+======================================================================
+HDR
+
+[[ "${WM_PROJECT_VERSION:-}" == "14" ]] || { echo "ERROR: source OpenFOAM Foundation v14 first" >&2; exit 2; }
+
+run_step "frozen release audit" log.release.verify ./VerifyRelease
+run_step "clean standalone AMR source" log.release.amr.clean ./AllwcleanAMR
+run_step "independent standalone AMR build" log.release.amr.build ./AllwmakeAMR
+[[ -s "$FOAM_USER_LIBBIN/libplanarFvMeshTopoChangers.so" ]] || { echo "ERROR: AMR library not produced" >&2; exit 3; }
+
+run_step "clean full detonation source" log.release.full.clean ./Allwclean
+run_step "full detonation + legacy transport build" log.release.full.build ./Allwmake
+[[ -s "$FOAM_USER_LIBBIN/libdetonationFluidSolver.so" ]] || { echo "ERROR: detonation solver library not produced" >&2; exit 4; }
+[[ -s "$FOAM_USER_LIBBIN/libdetonationLegacyThermophysicalTransportModels.so" ]] || { echo "ERROR: legacy transport library not produced" >&2; exit 4; }
+
+if ldd "$FOAM_USER_LIBBIN/libdetonationFluidSolver.so" 2>/dev/null | grep -q 'planarFvMeshTopoChangers'; then
+    echo "ERROR: detonation solver unexpectedly links against optional planar AMR library" >&2
+    exit 5
+fi
+echo "PASS: libdetonationFluidSolver.so has no runtime link dependency on libplanarFvMeshTopoChangers.so"
+
+SMOKE="$ROOT/_Release_fastSmoke"
+rm -rf "$SMOKE"
+cp -a "$ROOT/tutorials/1D_NH3_O2_cracking_0.3_detonation_OF14_fast" "$SMOKE"
+(
+    cd "$SMOKE"
+    ./Allclean >/dev/null 2>&1 || true
+)
+run_step "packaged OF14 fast serial foamRun smoke" log.release.fastSmoke bash -lc "cd '$SMOKE' && ./Allrun.serial"
+
+LOG="$SMOKE/log.foamRun"
+[[ -f "$LOG" ]] || { echo "ERROR: fast tutorial did not create log.foamRun" >&2; exit 6; }
+
+# Fatal runtime tokens. OpenFOAM's normal startup line
+#   sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+# is explicitly NOT a failure.
+if grep -Eqi 'FOAM FATAL|Segmentation fault|SIGSEGV|Aborted.*core dumped' "$LOG"; then
+    echo "ERROR: fast tutorial contains a fatal runtime token" >&2; exit 6
+fi
+if grep -Ei 'Floating point exception' "$LOG" | grep -Evi 'trapping|FOAM_SIGFPE' >/dev/null; then
+    echo "ERROR: fast tutorial contains a real floating-point-exception line" >&2; exit 6
+fi
+
+grep -q '^End$' "$LOG" || { echo "ERROR: fast tutorial did not reach End" >&2; exit 6; }
+P_LINE=$(grep 'min/max(p)' "$LOG" | tail -1 || true)
+T_LINE=$(grep 'min/max(T)' "$LOG" | tail -1 || true)
+SHOCK_LINE=$(grep 'Leading shock location' "$LOG" | tail -1 || true)
+[[ -n "$P_LINE" && -n "$T_LINE" ]] || { echo "ERROR: fast smoke missing final p/T diagnostics" >&2; exit 6; }
+
+ELAPSED=$(( $(date +%s)-START ))
+cat <<EOF_DONE
+======================================================================
+OpenFOAM 14 detonationFoam v1.0.0 compact release qualification: PASSED
+Elapsed wall time : ${ELAPSED} s / ${BUDGET} s budget
+AMR standalone    : clean independent build passed
+Full solver       : clean build passed; no AMR link dependency
+Runtime smoke     : packaged fast serial foamRun case reached End
+Pressure          : ${P_LINE}
+Temperature       : ${T_LINE}
+Shock             : ${SHOCK_LINE:-not printed}
+Long tests        : deferred post-release
+======================================================================
+EOF_DONE

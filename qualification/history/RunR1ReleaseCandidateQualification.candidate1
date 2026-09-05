@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT"
+BUDGET="${R1_MAX_SECONDS:-900}"
+START="$(date +%s)"
+RESULT="$ROOT/detonationFoam_OF14_R1_result.tar.xz"
+STATUS="$ROOT/GATE_R1_STATUS.md"
+LOGS=()
+
+remaining(){
+    local now elapsed rem
+    now=$(date +%s); elapsed=$((now-START)); rem=$((BUDGET-elapsed))
+    (( rem > 0 )) || rem=0
+    printf '%d' "$rem"
+}
+run_step(){
+    local label="$1" log="$2"; shift 2
+    local rem; rem=$(remaining)
+    echo "--- R1 step: $label (remaining budget ${rem}s)"
+    (( rem > 0 )) || { echo "ERROR: R1 wall-time budget exhausted before: $label" >&2; return 124; }
+    LOGS+=("$log")
+    timeout --preserve-status "${rem}s" "$@" >"$log" 2>&1 || {
+        local rc=$?
+        echo "ERROR: R1 step failed: $label (rc=$rc)" >&2
+        tail -80 "$log" >&2 || true
+        return "$rc"
+    }
+}
+collect(){
+    local rc=$?
+    local files=(R1_RELEASE_CANDIDATE_MANIFEST.md RELEASE_NOTES_R1.md GATE_R1_STATUS.md R1_SOURCE_SHA256SUMS)
+    for f in "${LOGS[@]:-}"; do [[ -f "$f" ]] && files+=("$f"); done
+    rm -f "$RESULT"
+    local keep=()
+    for f in "${files[@]}"; do [[ -f "$f" ]] && keep+=("$f"); done
+    if ((${#keep[@]})); then tar -cJf "$RESULT" "${keep[@]}" 2>/dev/null || true; fi
+    if [[ -f "$RESULT" ]]; then
+        echo "Result bundle: $RESULT"
+        sha256sum "$RESULT"
+    fi
+    exit "$rc"
+}
+trap collect EXIT
+
+cat <<HDR
+======================================================================
+OpenFOAM 14 detonationFoam R1 release-candidate clean-build qualification
+Hard wall-time budget: ${BUDGET} s
+Scope: static package audit; standalone AMR build; full solver build; short foamRun smoke
+======================================================================
+HDR
+
+[[ "${WM_PROJECT_VERSION:-}" == "14" ]] || { echo "ERROR: source OpenFOAM Foundation v14 first" >&2; exit 2; }
+
+run_step "static/package/documentation audit" log.R1.static ./VerifyR1ReleaseCandidate1
+
+# Build the optional AMR first, from a clean source tree, to prove it has its own build path.
+run_step "clean standalone AMR source" log.R1.amr.clean ./AllwcleanAMR
+run_step "independent standalone AMR build" log.R1.amr.build ./AllwmakeAMR
+[[ -s "$FOAM_USER_LIBBIN/libplanarFvMeshTopoChangers.so" ]] || { echo "ERROR: AMR library not produced" >&2; exit 3; }
+
+# Full solver build remains separate from AMR.
+run_step "clean full detonation source" log.R1.full.clean ./Allwclean
+run_step "full detonation + legacy transport build" log.R1.full.build ./Allwmake
+[[ -s "$FOAM_USER_LIBBIN/libdetonationFluidSolver.so" ]] || { echo "ERROR: detonation solver library not produced" >&2; exit 4; }
+[[ -s "$FOAM_USER_LIBBIN/libdetonationLegacyThermophysicalTransportModels.so" ]] || { echo "ERROR: legacy transport library not produced" >&2; exit 4; }
+
+if ldd "$FOAM_USER_LIBBIN/libdetonationFluidSolver.so" 2>/dev/null | grep -q 'planarFvMeshTopoChangers'; then
+    echo "ERROR: detonation solver unexpectedly links against optional planar AMR library" >&2
+    exit 5
+fi
+echo "PASS: libdetonationFluidSolver.so has no runtime link dependency on libplanarFvMeshTopoChangers.so"
+
+# Short packaged serial smoke. Work on a copy so the release tutorial remains clean.
+SMOKE="$ROOT/_R1_fastSmoke"
+rm -rf "$SMOKE"
+cp -a "$ROOT/tutorials/1D_NH3_O2_cracking_0.3_detonation_OF14_fast" "$SMOKE"
+(
+    cd "$SMOKE"
+    ./Allclean >/dev/null 2>&1 || true
+)
+run_step "packaged OF14 fast serial foamRun smoke" log.R1.fastSmoke bash -lc "cd '$SMOKE' && ./Allrun.serial"
+
+[[ -f "$SMOKE/log.foamRun" ]] || { echo "ERROR: fast tutorial did not create log.foamRun" >&2; exit 6; }
+if grep -Eqi 'FOAM FATAL|Segmentation fault|Floating point exception|SIGFPE' "$SMOKE/log.foamRun"; then
+    echo "ERROR: fast tutorial runtime health check failed" >&2; exit 6
+fi
+grep -q '^End$' "$SMOKE/log.foamRun" || { echo "ERROR: fast tutorial did not reach End" >&2; exit 6; }
+P_LINE=$(grep 'min/max(p)' "$SMOKE/log.foamRun" | tail -1 || true)
+T_LINE=$(grep 'min/max(T)' "$SMOKE/log.foamRun" | tail -1 || true)
+SHOCK_LINE=$(grep 'Leading shock location' "$SMOKE/log.foamRun" | tail -1 || true)
+[[ -n "$P_LINE" && -n "$T_LINE" ]] || { echo "ERROR: fast smoke missing final p/T diagnostics" >&2; exit 6; }
+
+ELAPSED=$(( $(date +%s)-START ))
+{
+    printf '# R1 release-candidate status - PASSED\n\n'
+    printf 'R1 clean-build/install qualification passed on OpenFOAM Foundation 14.\n\n'
+    printf -- '- elapsed wall time: %s s / %s s budget;\n' "$ELAPSED" "$BUDGET"
+    printf -- '- standalone AMR build: `./AllwmakeAMR` passed before the detonation build;\n'
+    printf -- '- full solver build: `./Allwmake` passed;\n'
+    printf -- '- `libdetonationFluidSolver.so` has no link dependency on `libplanarFvMeshTopoChangers.so`;\n'
+    printf -- '- packaged fast `foamRun` tutorial passed;\n'
+    printf -- '- final pressure diagnostic: `%s`;\n' "$P_LINE"
+    printf -- '- final temperature diagnostic: `%s`;\n' "$T_LINE"
+    printf -- '- final shock diagnostic: `%s`;\n' "${SHOCK_LINE:-not printed}"
+    printf -- '- long full-resolution/convergence/endurance/scaling studies remain deferred post-release.\n'
+} > "$STATUS"
+
+cat <<EOF_DONE
+======================================================================
+OpenFOAM 14 detonationFoam R1 release-candidate qualification: PASSED
+Elapsed wall time : ${ELAPSED} s / ${BUDGET} s budget
+AMR standalone    : clean independent build passed
+Full solver       : clean build passed; no AMR link dependency
+Runtime smoke     : packaged fast serial foamRun case passed
+Long tests        : deferred post-release
+======================================================================
+EOF_DONE

@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+cd "${0%/*}" || exit 1
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+if [ "${WM_PROJECT_VERSION:-}" != "14" ]; then
+    echo "ERROR: source OpenFOAM Foundation v14 before running this case" >&2
+    exit 2
+fi
+
+# Preserve the supplied OF8 nonuniform 0/ initial fields. Enable native OF14
+# runtime redistribution; chemistryProperties/cpuLoad=true supplies chemistry
+# CPU cost to the load-balancing infrastructure.
+cp constant/dynamicMeshDict.nativeLoadBalance constant/dynamicMeshDict
+
+runApplication blockMesh
+runApplication decomposePar -force
+runParallel foamRun

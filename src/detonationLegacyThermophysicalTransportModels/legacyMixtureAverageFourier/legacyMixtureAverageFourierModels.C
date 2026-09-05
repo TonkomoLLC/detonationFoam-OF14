@@ -1,0 +1,4 @@
+#include "fluidMulticomponentThermophysicalTransportModels.H"
+#include "legacyMixtureAverageFourier.H"
+
+makeLaminarThermophysicalTransportModel(legacyMixtureAverageFourier);

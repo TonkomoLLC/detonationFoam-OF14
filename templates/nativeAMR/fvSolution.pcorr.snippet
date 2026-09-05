@@ -1,0 +1,16 @@
+// Native OF14 AMR can introduce a pcorr solve during flux correction.
+// Merge this only if the E2 case does not already provide an equivalent regex.
+"pcorr.*"
+{
+    solver          PCG;
+    preconditioner
+    {
+        preconditioner  GAMG;
+        tolerance       1e-05;
+        relTol          0;
+        smoother        DICGaussSeidel;
+    }
+    tolerance       1e-05;
+    relTol          0;
+    maxIter         100;
+}

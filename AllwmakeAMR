@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+[ "${WM_PROJECT_VERSION:-}" = "14" ] || { echo "ERROR: source OpenFOAM Foundation v14 first" >&2; exit 2; }
+(cd "$ROOT/src/planarFvMeshTopoChangers" && ./Allwmake)
+echo "Built reusable AMR library independently of detonationFluid:"
+echo "  $FOAM_USER_LIBBIN/libplanarFvMeshTopoChangers.so"
+echo "Documentation: docs/planarRefiner_OF14_Manual.*"

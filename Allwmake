@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+[ "${WM_PROJECT_VERSION:-}" = "14" ] || { echo "ERROR: source OpenFOAM Foundation v14 first" >&2; exit 2; }
+(
+  cd "$ROOT/src/detonationLegacyThermophysicalTransportModels/legacyMixtureAverageFourier"
+  wmake libso
+)
+(
+  cd "$ROOT/applications/modules/detonationFluid"
+  wmake libso
+)
+echo "Built: $FOAM_USER_LIBBIN/libdetonationLegacyThermophysicalTransportModels.so"
+echo "Built: $FOAM_USER_LIBBIN/libdetonationFluidSolver.so"
+echo "Run cases with: foamRun"
+echo "Optional 2-D/wedge AMR is separate: ./AllwmakeAMR"

@@ -1,0 +1,5 @@
+legacyBinaryDiffusionCoefficient.C
+legacyMixtureAverageFourierModels.C
+legacyLogPolynomialWilkeThermos.C
+
+LIB = $(FOAM_USER_LIBBIN)/libdetonationLegacyThermophysicalTransportModels

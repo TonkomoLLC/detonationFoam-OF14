@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      solverTypeProperties;
+}
+
+// Gate-A modes: Euler or NS_Sutherland.
+// This tutorial used NS_Sutherland in the original OpenFOAM-8 case.
+solverType              NS_Sutherland;
+
+SW_position_limit       0.09999;
+shockDetectionPressure  101425;
+stopAtShockPosition     true;
+
+// ************************************************************************* //

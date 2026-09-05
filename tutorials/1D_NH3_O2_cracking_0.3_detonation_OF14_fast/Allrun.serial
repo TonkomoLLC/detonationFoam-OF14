@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+cd "${0%/*}" || exit 1
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+if [ "${WM_PROJECT_VERSION:-}" != "14" ]; then
+    echo "ERROR: source OpenFOAM Foundation v14 before running this case" >&2
+    exit 2
+fi
+
+# Gate-A regression: preserve the supplied OF8 nonuniform 0/ initial fields.
+# setFieldsDict is retained as an optional alternate ignition setup, but is
+# deliberately NOT applied by this regression runner.
+rm -f constant/dynamicMeshDict
+
+runApplication blockMesh
+runApplication foamRun

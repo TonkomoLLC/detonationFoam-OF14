@@ -1,0 +1,37 @@
+/* OpenFOAM Foundation v14 native refiner template for Stage E */
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+
+topoChanger
+{
+    type                refiner;
+    libs                ("libfvMeshTopoChangers.so");
+
+    // Refine every N time-steps
+    refineInterval      1;
+
+    // Detonation-front indicator. E2 will tune these to the prepared case.
+    field               T;
+    lowerRefineLevel    1000;
+    upperRefineLevel    4500;
+
+    // Permit unrefinement well behind the front; E2 may retune/disable it.
+    unrefineLevel       800;
+
+    nBufferLayers       1;
+    maxRefinement       1;
+    maxCells            200000;
+
+    // Recalculate the mass/momentum-carrying flux from mapped velocity.
+    // E2 will confirm the correct detonationFluid flux list before runtime use.
+    correctFluxes
+    (
+        (phi U)
+    );
+
+    dumpLevel           true;
+}

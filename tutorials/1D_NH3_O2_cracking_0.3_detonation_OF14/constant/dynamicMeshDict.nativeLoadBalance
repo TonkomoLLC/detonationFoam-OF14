@@ -1,0 +1,29 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+
+// Optional native OpenFOAM-14 chemistry-aware CPU load balancing.
+// Allrun.parallel copies this template to constant/dynamicMeshDict.
+distributor
+{
+    type                    loadBalancer;
+    libs                    ("libfvMeshDistributors.so");
+    // Scotch supports one weight per cell. Sum base + chemistry CPU loads.
+    multiConstraint         false;
+    redistributionInterval  10;
+    maxImbalance            0.10;
+}
+
+// ************************************************************************* //
