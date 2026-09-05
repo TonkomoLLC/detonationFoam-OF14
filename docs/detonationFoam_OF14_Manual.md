@@ -95,9 +95,11 @@ The runtime type is `planarRefiner`. The library owns topology refinement for sl
 The density equation advanced by `correctDensity.C` is
 
 $$
+\begin{aligned}
 \frac{\partial \rho}{\partial t}
-+ \nabla\cdot\left(\rho\mathbf{U}\right)
+&+ \nabla\cdot\left(\rho\mathbf{U}\right)
 = S_\rho,
+\end{aligned}
 $$
 
 where $S_\rho$ represents any source supplied through `fvModels().source(rho)`. The face mass flux is constructed by the selected shock-capturing flux backend rather than by a pressure-based flux correction.
@@ -107,9 +109,11 @@ where $S_\rho$ represents any source supplied through `fvModels().source(rho)`. 
 The conservative momentum equation is represented as
 
 $$
+\begin{aligned}
 \frac{\partial (\rho\mathbf{U})}{\partial t}
-+ \nabla\cdot\mathbf{F}_{\rho U}
+&+ \nabla\cdot\mathbf{F}_{\rho U}
 = \nabla\cdot\boldsymbol{\tau} + \mathbf{S}_U.
+\end{aligned}
 $$
 
 For `Euler`, the viscous stress term is disabled. For the viscous path, the stress operator comes from the OpenFOAM 14 compressible momentum-transport model through `momentumTransport_->divDevTau(U)`.
@@ -121,9 +125,11 @@ The numerical momentum flux contains both the transported momentum and the press
 For each solved species,
 
 $$
+\begin{aligned}
 \frac{\partial(\rho Y_i)}{\partial t}
-+ \nabla\cdot(\rho\mathbf{U}Y_i)
+&+ \nabla\cdot(\rho\mathbf{U}Y_i)
 = \dot{\omega}_i - \nabla\cdot\mathbf{j}_i + S_i,
+\end{aligned}
 $$
 
 where $\dot{\omega}_i$ is the finite-rate chemistry source, $\mathbf{j}_i$ is the diffusive mass flux for viscous modes, and $S_i$ is an optional `fvModel` source.
@@ -141,10 +147,14 @@ The qualification suite explicitly checks this closure after transport, AMR mapp
 The solver advances sensible internal energy $e$ together with the kinetic-energy contribution $K=|\mathbf{U}|^2/2$. In continuous notation the implemented balance corresponds to
 
 $$
+\begin{aligned}
 \frac{\partial(\rho e)}{\partial t}
-+ \nabla\cdot\mathbf{F}_{E}
-+ \frac{\partial(\rho K)}{\partial t}
-= \dot{Q} + S_e + \nabla\cdot\mathbf{q}_{\mathrm{diff}} + \nabla\cdot(\boldsymbol{\tau}\cdot\mathbf{U}),
+&+ \nabla\cdot\mathbf{F}_{E}
+&+ \frac{\partial(\rho K)}{\partial t} \\
+&= \dot{Q} + S_e
+&+ \nabla\cdot\mathbf{q}_{\mathrm{diff}}
+&+ \nabla\cdot(\boldsymbol{\tau}\cdot\mathbf{U}),
+\end{aligned}
 $$
 
 with the diffusive terms omitted for `Euler`. The convective energy flux contains reconstructed internal energy, kinetic energy, and the pressure-work flux supplied by the selected Riemann/central-upwind backend. Mesh-motion pressure work is included for moving meshes.
@@ -260,17 +270,21 @@ $$
 The release evaluates the raw positive diffusion vector
 
 $$
+\begin{aligned}
 \mathbf{F}_i
-= \rho D_i\nabla Y_i
-+ Y_i\rho D_i\frac{\nabla W_{\mathrm{mix}}}{W_{\mathrm{mix}}},
+&= \rho D_i\nabla Y_i
+&+ Y_i\rho D_i\frac{\nabla W_{\mathrm{mix}}}{W_{\mathrm{mix}}},
+\end{aligned}
 $$
 
 and exposes the corrected physical species flux
 
 $$
+\begin{aligned}
 \mathbf{j}_i
-= -\mathbf{F}_i
-+ Y_i\sum_k\mathbf{F}_k,
+&= -\mathbf{F}_i
+&+ Y_i\sum_k\mathbf{F}_k,
+\end{aligned}
 $$
 
 which enforces
@@ -550,34 +564,34 @@ A practical migration sequence is:
 
 ## 9.2 OF8 to OF14 capability disposition
 
-| OpenFOAM 8 detonationFoam capability | OpenFOAM 14 release treatment | Classification | Notes |
-|---|---|---|---|
-| Standalone `detonationFoam` executable | `detonationFluid` runtime solver module executed by `foamRun` | **Translated** | Modular OF14 solver architecture |
-| Density-based shock solver structure | OF14 `basicFluidSolver`/shock-fluid style modular infrastructure | **OF14 native substitution** | Same density-based design intent; OF14 lifecycle and mesh hooks |
-| `Kurganov` flux | Retained in unified OF14 face-flux path | **OF14/native-style retained** | Regression baseline |
-| `Tadmor` flux | Retained in unified OF14 face-flux path | **OF14/native-style retained** | Qualified |
-| `HLL` | Restored in `detonationFluid` | **Translated from OF8** | Conservative OF14 implementation |
-| `HLLC` | Restored in `detonationFluid` | **Translated from OF8** | Contact-wave/star-state logic retained |
-| `HLLCP` | Restored in `detonationFluid` | **Translated from OF8** | Pressure-corrected detonation flux retained |
-| `AUSM+` | Restored in `detonationFluid` | **Translated from OF8** | Qualified |
-| `AUSM+up` | Restored in `detonationFluid` | **Translated from OF8** | Qualified |
-| `Euler` solver type | `solverType Euler` | **Translated/retained** | Inviscid transport path |
-| `NS_Sutherland` | OF14 viscous momentum and thermophysical transport | **OF14 native substitution** | OF8/OF14 fixed-time profile comparison qualified |
-| Separate `solverTypeNS_mixtureAverage` equation files | Compatibility model behind OF14 `divj()`/`divq()` interfaces | **Translated into OF14 runtime model** | No duplicate solver branch |
-| Legacy mixture-average $D_i$ law | `legacyMixtureAverageFourier` | **Translated exactly** | Uses $(1-Y_i)$ numerator |
-| Legacy $D_{ij}(p,T)$ `Diff1..Diff4` law | `legacyBinaryDiffusionCoefficient` Function2 | **Translated exactly** | Tool supplied for conversion |
-| Legacy log-polynomial species $\mu_i$, $\lambda_i$ | Native OF14 `logPolynomialTransport<8>` | **OF14 native substitution** | Converted coefficients evaluated directly |
-| Legacy Wilke mixture viscosity | Native `coefficientWilkeMulticomponentMixture` | **OF14 native substitution** | Algebraic match verified to machine precision |
-| Legacy arithmetic/harmonic mixture conductivity | `legacyKappa()` in compatibility transport | **Translated exactly** | Native Wilke conductivity is not equivalent |
-| Species sensible-enthalpy diffusion | OF14 multicomponent `divq()` interface | **OF14 native framework + translated closure** | Uses corrected legacy species flux |
-| DLBFoam/load-balanced chemistry | OF14 standard chemistry with `cpuLoad true` plus native `loadBalancer` | **OF14 native substitution** | Old DLBFoam dependency intentionally removed |
-| Legacy/custom parallel redistribution | `fvMeshDistributors::loadBalancer` and Scotch | **OF14 native substitution** | MPI/restart qualified |
-| Legacy/custom 3-D AMR dependency | OF14 native `fvMeshTopoChangers::refiner` | **OF14 native substitution** | Serial/MPI/restart qualified |
-| True 2-D/axisymmetric AMR | New reusable `planarRefiner` library | **New OF14 portable component** | Independent of detonationFoam |
-| Published legacy Soret H/H2 behavior | Disabled | **Left out / deferred** | OF8 H/H2 assignment ambiguity must be resolved explicitly |
-| Automatic unrefinement in `planarRefiner` | Not implemented | **Left out / deferred** | Current 2-D component is refinement-only |
-| Full-resolution long OF8/OF14 equivalence and formal grid convergence | Not release-blocking | **Deferred post-release qualification** | Laptop policy limits release gates to short tests |
-| Formal strong/weak scalability study | Not release-blocking | **Deferred post-release qualification** | G4 is a compact infrastructure/timing smoke only |
+| OpenFOAM 8 detonationFoam capability | OpenFOAM 14 release treatment and classification | Notes |
+|---|---|---|
+| Standalone `detonationFoam` executable | `detonationFluid` runtime solver module executed by `foamRun`<br>**Classification:** Translated | Modular OF14 solver architecture |
+| Density-based shock solver structure | OF14 `basicFluidSolver`/shock-fluid style modular infrastructure<br>**Classification:** OF14 native substitution | Same density-based design intent; OF14 lifecycle and mesh hooks |
+| `Kurganov` flux | Retained in unified OF14 face-flux path<br>**Classification:** OF14/native-style retained | Regression baseline |
+| `Tadmor` flux | Retained in unified OF14 face-flux path<br>**Classification:** OF14/native-style retained | Qualified |
+| `HLL` | Restored in `detonationFluid`<br>**Classification:** Translated from OF8 | Conservative OF14 implementation |
+| `HLLC` | Restored in `detonationFluid`<br>**Classification:** Translated from OF8 | Contact-wave/star-state logic retained |
+| `HLLCP` | Restored in `detonationFluid`<br>**Classification:** Translated from OF8 | Pressure-corrected detonation flux retained |
+| `AUSM+` | Restored in `detonationFluid`<br>**Classification:** Translated from OF8 | Qualified |
+| `AUSM+up` | Restored in `detonationFluid`<br>**Classification:** Translated from OF8 | Qualified |
+| `Euler` solver type | `solverType Euler`<br>**Classification:** Translated/retained | Inviscid transport path |
+| `NS_Sutherland` | OF14 viscous momentum and thermophysical transport<br>**Classification:** OF14 native substitution | OF8/OF14 fixed-time profile comparison qualified |
+| Separate `solverTypeNS_mixtureAverage` equation files | Compatibility model behind OF14 `divj()`/`divq()` interfaces<br>**Classification:** Translated into OF14 runtime model | No duplicate solver branch |
+| Legacy mixture-average $D_i$ law | `legacyMixtureAverageFourier`<br>**Classification:** Translated exactly | Uses $(1-Y_i)$ numerator |
+| Legacy $D_{ij}(p,T)$ `Diff1..Diff4` law | `legacyBinaryDiffusionCoefficient` Function2<br>**Classification:** Translated exactly | Tool supplied for conversion |
+| Legacy log-polynomial species $\mu_i$, $\lambda_i$ | Native OF14 `logPolynomialTransport<8>`<br>**Classification:** OF14 native substitution | Converted coefficients evaluated directly |
+| Legacy Wilke mixture viscosity | Native `coefficientWilkeMulticomponentMixture`<br>**Classification:** OF14 native substitution | Algebraic match verified to machine precision |
+| Legacy arithmetic/harmonic mixture conductivity | `legacyKappa()` in compatibility transport<br>**Classification:** Translated exactly | Native Wilke conductivity is not equivalent |
+| Species sensible-enthalpy diffusion | OF14 multicomponent `divq()` interface<br>**Classification:** OF14 native framework + translated closure | Uses corrected legacy species flux |
+| DLBFoam/load-balanced chemistry | OF14 standard chemistry with `cpuLoad true` plus native `loadBalancer`<br>**Classification:** OF14 native substitution | Old DLBFoam dependency intentionally removed |
+| Legacy/custom parallel redistribution | `fvMeshDistributors::loadBalancer` and Scotch<br>**Classification:** OF14 native substitution | MPI/restart qualified |
+| Legacy/custom 3-D AMR dependency | OF14 native `fvMeshTopoChangers::refiner`<br>**Classification:** OF14 native substitution | Serial/MPI/restart qualified |
+| True 2-D/axisymmetric AMR | New reusable `planarRefiner` library<br>**Classification:** New OF14 portable component | Independent of detonationFoam |
+| Published legacy Soret H/H2 behavior | Disabled<br>**Classification:** Left out / deferred | OF8 H/H2 assignment ambiguity must be resolved explicitly |
+| Automatic unrefinement in `planarRefiner` | Not implemented<br>**Classification:** Left out / deferred | Current 2-D component is refinement-only |
+| Full-resolution long OF8/OF14 equivalence and formal grid convergence | Not release-blocking<br>**Classification:** Deferred post-release qualification | Laptop policy limits release gates to short tests |
+| Formal strong/weak scalability study | Not release-blocking<br>**Classification:** Deferred post-release qualification | G4 is a compact infrastructure/timing smoke only |
 
 ## 9.3 Important migration detail for `NS_mixtureAverage`
 
