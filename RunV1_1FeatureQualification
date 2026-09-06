@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT"
+
+./qualification/candidate1Runtime/RunPlanarAutoUnrefRuntimeGate
+./qualification/candidate1Runtime/RunPublishedOF8SoretRuntimeGate
+
+SMOKE="$ROOT/_V1_1_H2_smoke"
+rm -rf "$SMOKE"
+cp -a "$ROOT/tutorials/H2_O2_laptop_autoUnref_Soret_OF14" "$SMOKE"
+(
+  cd "$SMOKE"
+  ./Allrun
+)
+
+echo "======================================================================"
+echo "OpenFOAM 14 detonationFoam v1.1.0 feature qualification: PASSED"
+echo "======================================================================"

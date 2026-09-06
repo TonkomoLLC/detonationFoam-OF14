@@ -1,0 +1,26 @@
+FoamFile
+{
+    format ascii;
+    class dictionary;
+    location "constant";
+    object dynamicMeshDict;
+}
+topoChanger
+{
+    type planarRefiner;
+    libs ("libplanarFvMeshTopoChangers.so");
+    geometry auto;
+    refineInterval 1;
+    field indicator;
+    lowerRefineLevel 0.5;
+    upperRefineLevel 1.5;
+    maxCells 25000;
+    maxRefinementIterations 50;
+
+    automaticUnrefinement true;
+    unrefineInterval 1;
+    lowerUnrefineLevel 0.25;
+    upperUnrefineLevel 1.75;
+    maxRefinementLevel 1;
+    maxUnrefinementPassesPerUpdate 2;
+}

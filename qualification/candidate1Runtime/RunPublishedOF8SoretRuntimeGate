@@ -1,0 +1,96 @@
+#!/bin/bash
+set -euo pipefail
+HERE=$(cd "$(dirname "$0")" && pwd)
+ROOT=$(cd "$HERE/../.." && pwd)
+APPDIR="$HERE/applications/soretFluxQualification"
+RESULTS="$HERE/resultsSoret"
+mkdir -p "$RESULTS"
+
+if [ "${WM_PROJECT_VERSION:-}" != "14" ]; then
+    echo "ERROR: source OpenFOAM Foundation 14 first (WM_PROJECT_VERSION=${WM_PROJECT_VERSION:-unset})" >&2
+    exit 2
+fi
+
+show_failure () {
+    local step=$1
+    local log=$2
+    local rc=$3
+    echo "======================================================================" >&2
+    echo "FAIL: $step (exit code $rc)" >&2
+    echo "Log: $log" >&2
+    echo "------------------------------- tail ---------------------------------" >&2
+    if [ -f "$log" ]; then
+        tail -n 160 "$log" >&2 || true
+    else
+        echo "(log file was not created)" >&2
+    fi
+    echo "======================================================================" >&2
+}
+
+run_logged () {
+    local step=$1
+    local log=$2
+    shift 2
+    echo "RUN: $step"
+    set +e
+    "$@" >"$log" 2>&1
+    local rc=$?
+    set -e
+    if [ $rc -ne 0 ]; then
+        show_failure "$step" "$log" "$rc"
+        return $rc
+    fi
+    echo "PASS: $step"
+}
+
+python3 "$ROOT/qualification/candidate1/VerifyAutoUnrefSoretSource.py"
+python3 "$HERE/VerifySoretRuntimeGateSource.py"
+"$ROOT/Allwmake" 2>&1 | tee "$RESULTS/log.Allwmake"
+(
+  cd "$APPDIR"
+  wmake
+) 2>&1 | tee "$RESULTS/log.soretFluxQualification.wmake"
+
+run_case () {
+    local name=$1
+    local src="$HERE/cases/$name"
+    local run="$RESULTS/$name"
+    rm -rf "$run"
+    cp -a "$src" "$run"
+
+    (
+      cd "$run"
+      run_logged "$name: blockMesh" "$PWD/log.blockMesh" blockMesh
+      run_logged "$name: checkMesh" "$PWD/log.checkMesh" checkMesh
+      if ! grep -q 'Mesh OK' log.checkMesh; then
+          show_failure "$name: checkMesh did not report Mesh OK" "$PWD/log.checkMesh" 90
+          exit 90
+      fi
+      run_logged "$name: soretFluxQualification" "$PWD/log.soretFlux" soretFluxQualification
+      if ! grep -q 'SORET_END' log.soretFlux; then
+          show_failure "$name: probe did not reach SORET_END" "$PWD/log.soretFlux" 91
+          exit 91
+      fi
+      echo "PASS: $name runtime case reached SORET_END"
+    )
+}
+
+run_case soretPublishedOF8
+run_case soretOff
+python3 "$HERE/AnalyzeSoretFluxGate.py" \
+    "$RESULTS/soretPublishedOF8/log.soretFlux" \
+    "$RESULTS/soretOff/log.soretFlux" | tee "$RESULTS/analysis.txt"
+
+cat > "$RESULTS/SORET_GATE_SUMMARY.txt" <<'EOF2'
+PASS target: publishedOF8 reads original constant/thermoDiff layout.
+PASS target: only H2-N2 polynomial is nonzero, yet H direct Soret is activated.
+PASS target: inferred direct H2 Soret remains zero.
+PASS target: final corrected species fluxes obey the published H/H2 identity.
+PASS target: sum of all species diffusive mass fluxes is zero to roundoff.
+PASS target: legacyThermalDiffusionMode off is the zero-flux control.
+EOF2
+
+echo "======================================================================"
+echo "Candidate 1 published-OF8 H/H2 Soret runtime gate: PASSED"
+echo "Results: $RESULTS"
+echo "======================================================================"

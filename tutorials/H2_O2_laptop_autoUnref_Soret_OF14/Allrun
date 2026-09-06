@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+cd "$(dirname "$0")"
+
+if [ "${WM_PROJECT_VERSION:-}" != "14" ]; then
+    echo "ERROR: source OpenFOAM Foundation v14 first (for example: of140)." >&2
+    exit 2
+fi
+
+for exe in blockMesh setFields foamRun checkMesh; do
+    command -v "$exe" >/dev/null || { echo "ERROR: $exe not found in PATH" >&2; exit 2; }
+done
+
+# Start from the base mesh. Reversible automatic unrefinement intentionally
+# does not adopt ancestry from a pre-refined/restarted mesh.
+./Allclean
+
+echo "RUN: blockMesh (120 base cells)"
+blockMesh > log.blockMesh 2>&1 || { tail -80 log.blockMesh; exit 1; }
+
+echo "RUN: checkMesh base"
+checkMesh > log.checkMesh.base 2>&1 || { tail -80 log.checkMesh.base; exit 1; }
+
+echo "RUN: setFields (0.20 mm, 2 MPa, 2000 K ignition kernel)"
+setFields > log.setFields 2>&1 || { tail -80 log.setFields; exit 1; }
+
+echo "RUN: verify ignition fields"
+if ! ./VerifyIgnition.py; then
+    echo "FAIL: setFields did not create the requested ignition kernel"
+    echo "---- log.setFields ----"
+    cat log.setFields
+    exit 1
+fi
+
+echo "RUN: foamRun/detonationFluid"
+if ! foamRun > log.foamRun 2>&1; then
+    echo "FAIL: foamRun"
+    tail -120 log.foamRun
+    exit 1
+fi
+
+echo "RUN: analyzer"
+./AnalyzeLaptopSmoke.py

@@ -17,6 +17,8 @@ or from the release root:
 ./AllwmakeAMR
 ```
 
-This component is an `fvMeshTopoChanger`, **not an `fvModel`**. It owns 2-D slab/empty and wedge/axisymmetric topology refinement. Current release scope is refinement-only; automatic unrefinement/coarsening is not included.
+This component is an `fvMeshTopoChanger`, **not an `fvModel`**. It owns 2-D slab/empty and wedge/axisymmetric topology refinement.
+
+OpenFOAM 14 v1.1.0 adds optional automatic unrefinement using OpenFOAM's reversible `undoableMeshCutter` history. The default remains refinement-only (`automaticUnrefinement false`). When reversible coarsening is enabled, runtime mesh redistribution/load balancing and restart from a time containing active reversible splits are deliberately refused because the cutter ancestry is not serialized by this component.
 
 See `docs/planarRefiner_OF14_Manual.md`, `.docx`, or `.pdf`.

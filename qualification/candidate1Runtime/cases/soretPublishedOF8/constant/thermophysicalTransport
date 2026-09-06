@@ -1,0 +1,2665 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \    /   O peration     | Version: 14                                     |
+|   \  /    A nd           |                                                 |
+|    \/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalTransport;
+}
+
+laminar
+{
+    model legacyMixtureAverageFourier;
+    legacyThermalDiffusionMode publishedOF8;
+
+    D
+    {
+        AR-N2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-H
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HE
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        AR-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-H
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HE
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HE
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HE
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HE-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-H2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        OH-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-H2O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HO2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-O2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2O2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-N
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        O2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NH2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-NH3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-NNH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH3-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-N2H2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NNH-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-N2H3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-N2H4
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H3-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-H2NN
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2H4-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NN-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-N2O
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-NO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        N2O-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HNO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-HON
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-HONO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HON-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-H2NO
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NO-HNOH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NO-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NO-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NO-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NO-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        H2NO-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNOH-NH2OH
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNOH-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNOH-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNOH-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNOH-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2OH-HNO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2OH-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2OH-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NH2OH-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO2-HONO2
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HNO2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO2-NO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        HONO2-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+        NO3-HNO3
+        {
+            type legacyBinaryDiffusionCoefficient;
+            coeffs (0 0 0 0);
+        }
+    }
+}

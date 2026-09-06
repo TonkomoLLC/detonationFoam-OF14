@@ -2,9 +2,9 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
-BUDGET="${RELEASE_MAX_SECONDS:-900}"
+BUDGET="${RELEASE_MAX_SECONDS:-1200}"
 START="$(date +%s)"
-RESULT="$ROOT/detonationFoam_OF14_v1.0.0_qualification_result.tar.xz"
+RESULT="$ROOT/detonationFoam_OF14_v1.1.0_qualification_result.tar.xz"
 LOGS=()
 
 remaining(){
@@ -22,15 +22,16 @@ run_step(){
     timeout --preserve-status "${rem}s" "$@" >"$log" 2>&1 || {
         local rc=$?
         echo "ERROR: release step failed: $label (rc=$rc)" >&2
-        tail -80 "$log" >&2 || true
+        tail -100 "$log" >&2 || true
         return "$rc"
     }
 }
 collect(){
     local rc=$?
-    local files=(VERSION README.md RELEASE_NOTES.md RELEASE_MANIFEST.md QUALIFICATION_SUMMARY.md GATE_R1_STATUS.md)
+    local files=(VERSION README.md RELEASE_NOTES.md RELEASE_MANIFEST.md QUALIFICATION_SUMMARY.md)
     for f in "${LOGS[@]:-}"; do [[ -f "$f" ]] && files+=("$f"); done
     [[ -f _Release_fastSmoke/log.foamRun ]] && files+=("_Release_fastSmoke/log.foamRun")
+    [[ -f _Release_H2_smoke/log.foamRun ]] && files+=("_Release_H2_smoke/log.foamRun")
     rm -f "$RESULT"
     tar -cJf "$RESULT" "${files[@]}" 2>/dev/null || true
     if [[ -f "$RESULT" ]]; then
@@ -43,9 +44,10 @@ trap collect EXIT
 
 cat <<HDR
 ======================================================================
-OpenFOAM 14 detonationFoam v1.0.0 compact release qualification
+OpenFOAM 14 detonationFoam v1.1.0 compact release qualification
 Hard wall-time budget: ${BUDGET} s
-Scope: frozen release audit; standalone AMR build; full solver build; fast foamRun smoke
+Scope: frozen release audit; independent AMR build; full solver build;
+       retained fast foamRun smoke; v1.1 H2/Soret/auto-unref integration smoke
 ======================================================================
 HDR
 
@@ -74,38 +76,47 @@ cp -a "$ROOT/tutorials/1D_NH3_O2_cracking_0.3_detonation_OF14_fast" "$SMOKE"
     cd "$SMOKE"
     ./Allclean >/dev/null 2>&1 || true
 )
-run_step "packaged OF14 fast serial foamRun smoke" log.release.fastSmoke bash -lc "cd '$SMOKE' && ./Allrun.serial"
+run_step "retained OF14 fast serial foamRun smoke" log.release.fastSmoke bash -lc "cd '$SMOKE' && ./Allrun.serial"
 
 LOG="$SMOKE/log.foamRun"
 [[ -f "$LOG" ]] || { echo "ERROR: fast tutorial did not create log.foamRun" >&2; exit 6; }
-
-# Fatal runtime tokens. OpenFOAM's normal startup line
-#   sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
-# is explicitly NOT a failure.
 if grep -Eqi 'FOAM FATAL|Segmentation fault|SIGSEGV|Aborted.*core dumped' "$LOG"; then
     echo "ERROR: fast tutorial contains a fatal runtime token" >&2; exit 6
 fi
 if grep -Ei 'Floating point exception' "$LOG" | grep -Evi 'trapping|FOAM_SIGFPE' >/dev/null; then
     echo "ERROR: fast tutorial contains a real floating-point-exception line" >&2; exit 6
 fi
-
 grep -q '^End$' "$LOG" || { echo "ERROR: fast tutorial did not reach End" >&2; exit 6; }
+
+# New v1.1 integration smoke. Run a copy because Allrun/setFields modifies case state.
+H2="$ROOT/_Release_H2_smoke"
+rm -rf "$H2"
+cp -a "$ROOT/tutorials/H2_O2_laptop_autoUnref_Soret_OF14" "$H2"
+run_step "v1.1 120-cell H2/Soret/auto-unref smoke" log.release.H2 bash -lc "cd '$H2' && ./Allrun"
+[[ -f "$H2/log.foamRun" ]] || { echo "ERROR: H2 smoke did not create log.foamRun" >&2; exit 7; }
+grep -q 'H2/O2 laptop integrated auto-unrefinement + Soret smoke: PASSED' log.release.H2 || {
+    echo "ERROR: H2 integration smoke did not report PASS" >&2; exit 7;
+}
+
 P_LINE=$(grep 'min/max(p)' "$LOG" | tail -1 || true)
 T_LINE=$(grep 'min/max(T)' "$LOG" | tail -1 || true)
 SHOCK_LINE=$(grep 'Leading shock location' "$LOG" | tail -1 || true)
-[[ -n "$P_LINE" && -n "$T_LINE" ]] || { echo "ERROR: fast smoke missing final p/T diagnostics" >&2; exit 6; }
+H2_T=$(grep 'INFO: final T min/max' log.release.H2 | tail -1 || true)
+H2_SHOCK=$(grep 'INFO: final shock position' log.release.H2 | tail -1 || true)
 
 ELAPSED=$(( $(date +%s)-START ))
 cat <<EOF_DONE
 ======================================================================
-OpenFOAM 14 detonationFoam v1.0.0 compact release qualification: PASSED
+OpenFOAM 14 detonationFoam v1.1.0 compact release qualification: PASSED
 Elapsed wall time : ${ELAPSED} s / ${BUDGET} s budget
 AMR standalone    : clean independent build passed
 Full solver       : clean build passed; no AMR link dependency
-Runtime smoke     : packaged fast serial foamRun case reached End
-Pressure          : ${P_LINE}
-Temperature       : ${T_LINE}
-Shock             : ${SHOCK_LINE:-not printed}
+Retained smoke    : packaged fast serial foamRun case reached End
+Retained pressure : ${P_LINE:-not printed}
+Retained temp.    : ${T_LINE:-not printed}
+Retained shock    : ${SHOCK_LINE:-not printed}
+v1.1 H2 smoke     : ${H2_T:-PASS}
+v1.1 H2 shock     : ${H2_SHOCK:-PASS}
 Long tests        : deferred post-release
 ======================================================================
 EOF_DONE

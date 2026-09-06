@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+
+topoChanger
+{
+    type        planarRefiner;
+    libs        ("libplanarFvMeshTopoChangers.so");
+
+    geometry                    auto;
+    refineInterval              1;
+    field                       T;
+
+    // Initial 2000 K ignition cells lie inside this band and refine at the
+    // first mesh update. Cold 300 K reactants do not refine.
+    lowerRefineLevel            700;
+    upperRefineLevel            2200;
+
+    maxCells                    2000;
+    maxRefinementIterations     50;
+
+    automaticUnrefinement       true;
+    unrefineInterval            1;
+
+    // Hysteresis: fully burned hot cells should leave on the high side and
+    // become eligible for coarsening behind the reaction front.
+    lowerUnrefineLevel          600;
+    upperUnrefineLevel          2400;
+
+    maxRefinementLevel          1;
+    maxUnrefinementPassesPerUpdate 2;
+}

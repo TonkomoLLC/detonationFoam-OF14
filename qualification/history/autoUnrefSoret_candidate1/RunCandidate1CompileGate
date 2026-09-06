@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+
+"$ROOT/VerifyCandidate1AutoUnrefSoret"
+
+cd "$ROOT"
+./Allwmake
+./AllwmakeAMR
+
+echo "PASS: Candidate 1 source/static checks and OF14 build completed"

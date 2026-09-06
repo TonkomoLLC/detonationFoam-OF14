@@ -1,0 +1,28 @@
+FoamFile { format ascii; class dictionary; object blockMeshDict; }
+scale 1;
+// x-axis annular wedge, radii 0.01..0.02 m, length 0.08 m, +/-2.5 deg
+vertices
+(
+    (0.00 0.0099904822 -0.0004361939)
+    (0.08 0.0099904822 -0.0004361939)
+    (0.08 0.0199809644 -0.0008723878)
+    (0.00 0.0199809644 -0.0008723878)
+    (0.00 0.0099904822  0.0004361939)
+    (0.08 0.0099904822  0.0004361939)
+    (0.08 0.0199809644  0.0008723878)
+    (0.00 0.0199809644  0.0008723878)
+);
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (80 20 1) simpleGrading (1 1 1)
+);
+edges ();
+boundary
+(
+    inlet  { type patch; faces ((0 4 7 3)); }
+    outlet { type patch; faces ((1 2 6 5)); }
+    inner  { type wall;  faces ((0 1 5 4)); }
+    outer  { type wall;  faces ((3 7 6 2)); }
+    wedgeMinus { type wedge; faces ((0 3 2 1)); }
+    wedgePlus  { type wedge; faces ((4 5 6 7)); }
+);

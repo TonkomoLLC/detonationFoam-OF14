@@ -1,0 +1,39 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      chemistryProperties;
+}
+
+// OF14 standard finite-rate chemistry.  The OF8/DLBFoam loadBalanced method
+// is intentionally removed.
+type            standard;
+chemistry       on;
+
+// OF14 Standard chemistry reads this switch and registers per-cell chemistry
+// CPU cost. The native fvMeshDistributors::loadBalancer consumes registered
+// cpuLoad objects during parallel redistribution.
+cpuLoad         true;
+
+// Preserved from the OF8 tutorial.
+initialChemicalTimeStep 1;
+
+ode
+{
+    solver          seulex;
+    absTol          1e-06;
+    relTol          1e-03;
+}
+
+#include "$FOAM_CASE/constant/foam/reactions.foam"
+
+// ************************************************************************* //

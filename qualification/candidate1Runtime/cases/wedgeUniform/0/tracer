@@ -1,0 +1,18 @@
+FoamFile
+{
+    format ascii;
+    class volScalarField;
+    location "0";
+    object tracer;
+}
+dimensions [0 0 0 0 0 0 0];
+internalField uniform 0;
+boundaryField
+{
+    inlet  { type zeroGradient; }
+    outlet { type zeroGradient; }
+    inner  { type zeroGradient; }
+    outer  { type zeroGradient; }
+    wedgeMinus { type wedge; }
+    wedgePlus  { type wedge; }
+}

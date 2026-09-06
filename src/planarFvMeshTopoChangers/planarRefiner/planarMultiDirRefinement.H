@@ -169,6 +169,17 @@ public:
             const dictionary& coordinatesDict
         );
 
+        //- Construct from dictionary using an externally owned reversible
+        //  cutter. This is the planarRefiner automatic-unrefinement path.
+        planarMultiDirRefinement
+        (
+            polyMesh& mesh,
+            undoableMeshCutter& cutter,
+            const labelList& cellLabels,
+            const dictionary& dict,
+            const dictionary& coordinatesDict
+        );
+
         //- Construct from components. Only this one would allow undo actions.
         planarMultiDirRefinement
         (

@@ -3,11 +3,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
-[[ "$(cat VERSION)" == "1.0.0" ]] || { echo "ERROR: VERSION is not 1.0.0" >&2; exit 2; }
+[[ "$(cat VERSION)" == "1.1.0" ]] || { echo "ERROR: VERSION is not 1.1.0" >&2; exit 2; }
 [[ -f RELEASE_FILE_SHA256SUMS ]] || { echo "ERROR: RELEASE_FILE_SHA256SUMS missing" >&2; exit 2; }
 sha256sum -c RELEASE_FILE_SHA256SUMS >/dev/null
 
-echo "PASS: v1.0.0 frozen-file checksums"
+echo "PASS: v1.1.0 frozen-file checksums"
 
 for f in \
   docs/detonationFoam_OF14_Manual.md \
@@ -19,23 +19,22 @@ for f in \
   [[ -s "$f" ]] || { echo "ERROR: missing manual: $f" >&2; exit 3; }
 done
 
-grep -q 'OF8' docs/detonationFoam_OF14_Manual.md
-grep -q 'migration' docs/detonationFoam_OF14_Manual.md
-grep -q 'capability' docs/detonationFoam_OF14_Manual.md
-grep -q 'planarRefiner' docs/detonationFoam_OF14_Manual.md
-grep -q 'fvMeshTopoChanger' docs/planarRefiner_OF14_Manual.md
-grep -q './AllwmakeAMR' docs/planarRefiner_OF14_Manual.md
-grep -q 'Version 1.0.0 - September 2026' docs/detonationFoam_OF14_Manual.md
-grep -q 'Version 1.0.0 - September 2026' docs/planarRefiner_OF14_Manual.md
+grep -q 'Version 1.1.0 - September 2026' docs/detonationFoam_OF14_Manual.md
+grep -q 'Version 1.1.0 - September 2026' docs/planarRefiner_OF14_Manual.md
+grep -q 'automaticUnrefinement' docs/detonationFoam_OF14_Manual.md
+grep -q 'publishedOF8' docs/detonationFoam_OF14_Manual.md
+grep -q 'Reversible split tree' docs/planarRefiner_OF14_Manual.md
+grep -q 'maxUnrefinementPassesPerUpdate' docs/planarRefiner_OF14_Manual.md
+grep -q 'OF8 to OF14 capability disposition' docs/detonationFoam_OF14_Manual.md
 
-# Word styles must retain the monospaced inline/code style requested for OpenFOAM text.
+# Word styles retain the monospaced code style requested for OpenFOAM text.
 for f in docs/*.docx; do
   unzip -p "$f" word/styles.xml | grep -q 'Liberation Mono' || {
     echo "ERROR: monospaced Word code style not found in $f" >&2; exit 4;
   }
 done
 
-echo "PASS: six final manuals, OF8 migration, AMR documentation, GitHub Markdown, and monospaced Word code styles"
+echo "PASS: six v1.1.0 manuals, migration, Soret, automatic-unrefinement, and monospaced Word styles"
 
 [[ -x Allwmake && -x AllwmakeAMR && -x Allwclean && -x AllwcleanAMR ]]
 [[ -x src/planarFvMeshTopoChangers/Allwmake ]]
@@ -46,11 +45,33 @@ fi
 
 echo "PASS: standalone planarRefiner source/build path is solver-independent"
 
-grep -q 'Final release status: PASSED / RELEASED' QUALIFICATION_SUMMARY.md
-grep -q 'R1 PASSED' qualification/R1_RETURNED_RESULT_ASSESSMENT.md
-grep -q 'Gate F3 status - PASSED' qualification/GATE_F3_STATUS.md
+# Re-run the accepted production/static feature audit.
+python3 qualification/candidate1/VerifyAutoUnrefSoretSource.py >/dev/null
 
-echo "PASS: authoritative qualification summary closes F3, G1-G4, and R1"
+echo "PASS: automatic-unrefinement + publishedOF8 Soret production/static audit"
+
+# New integrated laptop tutorial packaging.
+TUT=tutorials/H2_O2_laptop_autoUnref_Soret_OF14
+for f in Allrun Allclean AnalyzeLaptopSmoke.py VerifyIgnition.py VerifyLaptopSmoke \
+         constant/dynamicMeshDict constant/thermophysicalTransport constant/thermoDiff \
+         system/setFieldsDict; do
+  [[ -s "$TUT/$f" ]] || { echo "ERROR: missing v1.1.0 laptop-smoke file: $TUT/$f" >&2; exit 6; }
+done
+grep -q 'automaticUnrefinement[[:space:]]*true' "$TUT/constant/dynamicMeshDict"
+grep -q 'legacyThermalDiffusionMode[[:space:]]*publishedOF8' "$TUT/constant/thermophysicalTransport"
+grep -q 'synthetic diagnostic' "$TUT/README.md"
+python3 -m py_compile "$TUT/AnalyzeLaptopSmoke.py" "$TUT/VerifyIgnition.py"
+
+echo "PASS: 120-cell integrated H2/O2 laptop tutorial packaged with initialization guard"
+
+grep -q 'Final release status: PASSED / RELEASED' QUALIFICATION_SUMMARY.md
+grep -q 'v1.1-U' QUALIFICATION_SUMMARY.md
+grep -q 'v1.1-S' QUALIFICATION_SUMMARY.md
+grep -q 'v1.1-I' QUALIFICATION_SUMMARY.md
+grep -q 'Status: \*\*PASSED' qualification/V1_1_AUTO_UNREF_SORET_QUALIFICATION.md
+grep -q 'Status: \*\*PASSED' qualification/INTEGRATED_H2_LAPTOP_SMOKE.md
+
+echo "PASS: authoritative v1.1.0 qualification summary and feature closure records"
 
 bash -n VerifyRelease
 bash -n RunReleaseQualification
@@ -58,6 +79,8 @@ bash -n Allwmake
 bash -n AllwmakeAMR
 bash -n Allwclean
 bash -n AllwcleanAMR
+bash -n "$TUT/Allrun"
+bash -n "$TUT/Allclean"
 
 echo "PASS: release shell syntax"
-echo "OpenFOAM 14 detonationFoam v1.0.0 release verification: PASSED"
+echo "OpenFOAM 14 detonationFoam v1.1.0 release verification: PASSED"

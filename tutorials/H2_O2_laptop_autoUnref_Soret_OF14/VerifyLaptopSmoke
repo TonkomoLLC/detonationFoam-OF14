@@ -1,0 +1,20 @@
+#!/bin/bash
+set -euo pipefail
+cd "$(dirname "$0")"
+n=0
+pass(){ echo "PASS: $1"; n=$((n+1)); }
+grep -q '(120 1 1)' system/blockMeshDict && pass '120-cell base mesh'
+grep -q 'solver[[:space:]]*detonationFluid' system/controlDict && pass 'foamRun detonationFluid selected'
+grep -q 'automaticUnrefinement[[:space:]]*true' constant/dynamicMeshDict && pass 'automatic unrefinement enabled'
+grep -q 'maxRefinementLevel[[:space:]]*1' constant/dynamicMeshDict && pass 'one planar refinement level'
+grep -q 'field[[:space:]]*T' constant/dynamicMeshDict && pass 'temperature AMR indicator'
+grep -q 'libdetonationLegacyThermophysicalTransportModels.so' system/controlDict && pass 'legacy transport runtime library loaded'
+grep -q 'legacyThermalDiffusionMode publishedOF8' constant/thermophysicalTransport && pass 'publishedOF8 Soret mode enabled'
+grep -A4 '^H2-O2' constant/thermoDiff | grep -q 'ThermDiff_1 1;' && pass 'synthetic nonzero H2-O2 Soret probe coefficient'
+grep -q '^defaultValues' system/setFieldsDict && pass 'OF14 setFields defaultValues syntax'
+grep -q '^zones' system/setFieldsDict && pass 'OF14 setFields zones syntax'
+grep -q 'p[[:space:]]*2000000;' system/setFieldsDict && pass 'compact ignition pressure kernel'
+grep -q 'T[[:space:]]*2000;' system/setFieldsDict && pass 'compact ignition temperature kernel'
+grep -q 'SW_position_limit[[:space:]]*0.00070' constant/solverTypeProperties && pass 'early shock-position stop configured'
+test -x VerifyIgnition.py && pass 'post-setFields ignition verifier present'
+echo "PASS: $n/14 laptop-smoke source checks"

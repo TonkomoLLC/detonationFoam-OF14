@@ -1,0 +1,7 @@
+FoamFile { format ascii; class dictionary; object qualificationProperties; }
+mode uniform;
+refineValue 1;
+unrefineValue 0;
+xMin -1e30;
+xMax 1e30;
+uniformTracerValue 2.5;

@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+HERE=$(cd "$(dirname "$0")" && pwd)
+"$HERE/RunPlanarAutoUnrefRuntimeGate"
+"$HERE/RunPublishedOF8SoretRuntimeGate"
+echo "======================================================================"
+echo "Candidate 1 automatic-unrefinement + published-OF8 Soret runtime suite: PASSED"
+echo "======================================================================"

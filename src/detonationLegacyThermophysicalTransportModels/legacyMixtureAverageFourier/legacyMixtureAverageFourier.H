@@ -8,6 +8,7 @@
 
 #include "unityLewisFourier.H"
 #include "Function2.H"
+#include "FixedList.H"
 
 namespace Foam
 {
@@ -25,10 +26,18 @@ class legacyMixtureAverageFourier
     // Binary D_ij(p,T) functions. Only the upper triangle i<j is populated.
     List<PtrList<Function2<scalar>>> DFuncs_;
 
-    // D2 candidate-1 deliberately supports only the historically exercised
-    // thermalDiffusion=off path. The published OF8 H2 Soret assignment is
-    // ambiguous and is not silently corrected here.
+    // Legacy thermal-diffusion compatibility mode. "publishedOF8"
+    // deliberately reproduces the published OF8 H/H2 implementation,
+    // including its H2->TDRatio_H assignment. "off" is the default.
     word legacyThermalDiffusionMode_;
+
+    // Polynomial coefficients a..d for
+    // alphaT_ij = a + T*(b + T*(c + T*d)).
+    // Indexed by the partner-species index for H and H2 respectively.
+    List<FixedList<scalar, 4>> thermalDiffH_;
+    List<FixedList<scalar, 4>> thermalDiffH2_;
+    label HIndex_;
+    label H2Index_;
 
     // Per-predictor caches. They are cleared on every mesh topology/map/
     // distribution change, mirroring the native OF14 Fickian cache policy.
@@ -41,8 +50,19 @@ class legacyMixtureAverageFourier
 
     const Function2<scalar>& Dij(const label i, const label j) const;
 
+    void readLegacyThermalDiffusionCoeffs(const dictionary& coeffDict);
+
+    // Published OF8 thermal-diffusion ratio for species i. In
+    // publishedOF8 mode H receives both the H and H2 polynomial sums and
+    // H2 receives zero, reproducing the source-level assignment exactly.
+    tmp<volScalarField> thermalDiffusionRatio(const label i) const;
+
+    // Positive legacy thermal-diffusion raw flux contribution before the
+    // mixture correction. The sign follows the OF8 DiffError expression.
+    tmp<surfaceScalarField> thermalRawFlux(const label i) const;
+
     // Positive legacy raw diffusion vector before the mixture correction:
-    // rho*Di*grad(Yi) + Yi*rho*Di*grad(W)/W.
+    // rho*Di*grad(Yi) + Yi*rho*Di*grad(W)/W + SoretRaw_i.
     tmp<surfaceScalarField> rawFlux(const label i) const;
 
     void updateSumRawFlux() const;

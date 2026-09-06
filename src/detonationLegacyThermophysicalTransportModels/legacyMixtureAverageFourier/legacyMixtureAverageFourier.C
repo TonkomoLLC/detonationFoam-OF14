@@ -7,6 +7,7 @@
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
 #include "surfaceInterpolate.H"
+#include "IOdictionary.H"
 
 namespace Foam
 {
@@ -109,6 +110,247 @@ legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::Dm() const
 
 
 template<class BasicThermophysicalTransportModel>
+void legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::
+readLegacyThermalDiffusionCoeffs
+(
+    const dictionary& coeffDict
+)
+{
+    const speciesTable& species = this->thermo().species();
+
+    HIndex_ = -1;
+    H2Index_ = -1;
+    forAll(species, i)
+    {
+        if (species[i] == "H") HIndex_ = i;
+        if (species[i] == "H2") H2Index_ = i;
+    }
+
+    thermalDiffH_.setSize(species.size());
+    thermalDiffH2_.setSize(species.size());
+    forAll(species, i)
+    {
+        for (label coeffi=0; coeffi<4; ++coeffi)
+        {
+            thermalDiffH_[i][coeffi] = 0;
+            thermalDiffH2_[i][coeffi] = 0;
+        }
+    }
+
+    if (legacyThermalDiffusionMode_ == "off")
+    {
+        return;
+    }
+
+    if (legacyThermalDiffusionMode_ != "publishedOF8")
+    {
+        FatalIOErrorInFunction(coeffDict)
+            << "Unknown legacyThermalDiffusionMode '"
+            << legacyThermalDiffusionMode_ << "'. Valid modes are off and "
+            << "publishedOF8." << exit(FatalIOError);
+    }
+
+    auto readFromDictionary =
+    [&](const dictionary& tdDict)
+    {
+        auto readLightSpecies =
+        [&](const label lightI, List<FixedList<scalar, 4>>& coeffs)
+        {
+            if (lightI < 0) return;
+
+            forAll(species, j)
+            {
+                if (j == lightI) continue;
+
+                const word nameij(species[lightI] + '-' + species[j]);
+                const word nameji(species[j] + '-' + species[lightI]);
+                const dictionary* pairPtr = nullptr;
+
+                if (tdDict.found(nameij))
+                {
+                    pairPtr = &tdDict.subDict(nameij);
+                }
+                else if (tdDict.found(nameji))
+                {
+                    pairPtr = &tdDict.subDict(nameji);
+                }
+                else
+                {
+                    FatalIOErrorInFunction(tdDict)
+                        << "Missing published-OF8 thermal-diffusion pair "
+                        << nameij << " (or reversed name " << nameji << "). "
+                        << "Version 1.1.0 deliberately does not infer the OF8 "
+                        << "trandat/groupSpecies fallback; provide an explicit "
+                        << "pair coefficient dictionary."
+                        << exit(FatalIOError);
+                }
+
+                const dictionary& pair = *pairPtr;
+                coeffs[j][0] = pair.lookup<scalar>("ThermDiff_1");
+                coeffs[j][1] = pair.lookup<scalar>("ThermDiff_2");
+                coeffs[j][2] = pair.lookup<scalar>("ThermDiff_3");
+                coeffs[j][3] = pair.lookup<scalar>("ThermDiff_4");
+            }
+        };
+
+        readLightSpecies(HIndex_, thermalDiffH_);
+        readLightSpecies(H2Index_, thermalDiffH2_);
+    };
+
+    if (coeffDict.found("thermalDiffusionCoeffs"))
+    {
+        readFromDictionary(coeffDict.subDict("thermalDiffusionCoeffs"));
+        Info<< "legacyMixtureAverageFourier: reading published OF8 Soret "
+            << "coefficients from thermalDiffusionCoeffs" << endl;
+    }
+    else
+    {
+        // Accept the original OF8 case layout without requiring a dictionary
+        // conversion. The OF8 reader used constant/thermoDiff.
+        const fvMesh& mesh = this->thermo().T().mesh();
+        IOdictionary thermoDiff
+        (
+            IOobject
+            (
+                "thermoDiff",
+                mesh.time().constant(),
+                mesh,
+                IOobject::MUST_READ_IF_MODIFIED,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+        readFromDictionary(thermoDiff);
+        Info<< "legacyMixtureAverageFourier: reading published OF8 Soret "
+            << "coefficients from constant/thermoDiff" << endl;
+    }
+
+    Info<< "legacyMixtureAverageFourier: published OF8 H/H2 Soret "
+        << "compatibility enabled" << nl
+        << "    NOTE: this mode intentionally reproduces the published OF8 "
+        << "H2 -> TDRatio_H assignment; TDRatio_H2 remains zero." << endl;
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<volScalarField>
+legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::
+thermalDiffusionRatio
+(
+    const label i
+) const
+{
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& T = this->thermo().T();
+
+    tmp<volScalarField> tRatio
+    (
+        volScalarField::New
+        (
+            "legacyTDRatio_" + Y[i].name(),
+            T.mesh(),
+            dimensionedScalar(dimless, 0)
+        )
+    );
+
+    if (legacyThermalDiffusionMode_ != "publishedOF8" || i != HIndex_)
+    {
+        return tRatio;
+    }
+
+    const volScalarField Wm(this->thermo().W());
+    const dimensionedScalar TUnit("TUnit", dimTemperature, 1.0);
+    const volScalarField theta(T/TUnit);
+
+    auto accumulate =
+    [&](const label lightI, const List<FixedList<scalar, 4>>& coeffs)
+    {
+        if (lightI < 0) return;
+
+        const volScalarField XiLight
+        (
+            Y[lightI]*Wm/this->thermo().Wi(lightI)
+        );
+
+        forAll(Y, j)
+        {
+            if (j == lightI) continue;
+
+            const volScalarField Xj(Y[j]*Wm/this->thermo().Wi(j));
+            const FixedList<scalar, 4>& a = coeffs[j];
+            tRatio.ref() +=
+                XiLight*Xj
+               *(
+                    a[0]
+                  + theta*(a[1] + theta*(a[2] + theta*a[3]))
+                );
+        }
+    };
+
+    // Exact published OF8 behavior:
+    //   H  contributions -> TDRatio_H
+    //   H2 contributions -> TDRatio_H   (not TDRatio_H2)
+    accumulate(HIndex_, thermalDiffH_);
+    accumulate(H2Index_, thermalDiffH2_);
+
+    return tRatio;
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<surfaceScalarField>
+legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::thermalRawFlux
+(
+    const label i
+) const
+{
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& T = this->thermo().T();
+
+    tmp<surfaceScalarField> tFlux
+    (
+        surfaceScalarField::New
+        (
+            "legacyThermalRawFlux_" + Y[i].name(),
+            T.mesh(),
+            dimensionedScalar(dimMass/dimArea/dimTime, 0)
+        )
+    );
+
+    if
+    (
+        legacyThermalDiffusionMode_ != "publishedOF8"
+     || (i != HIndex_ && i != H2Index_)
+    )
+    {
+        return tFlux;
+    }
+
+    const volScalarField Wm(this->thermo().W());
+    const volScalarField Xi(Y[i]*Wm/this->thermo().Wi(i));
+    const tmp<volScalarField> tRatio(thermalDiffusionRatio(i));
+    const tmp<volScalarField> tRhoDi
+    (
+        this->momentumTransport().rho()*Dm()[i]
+    );
+
+    const tmp<volVectorField> tSoret
+    (
+       -tRhoDi()*tRatio()*Y[i]
+       /(T*(Xi + dimensionedScalar("smallX", dimless, small)))*fvc::grad(T)
+    );
+
+    tFlux.ref() =
+        (
+            fvc::interpolate(this->alpha()*tSoret())
+          & T.mesh().Sf()
+        )/T.mesh().magSf();
+
+    return tFlux;
+}
+
+
+template<class BasicThermophysicalTransportModel>
 tmp<surfaceScalarField>
 legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::rawFlux
 (
@@ -126,14 +368,21 @@ legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::rawFlux
       + Di*Y[i]/Wm*fvc::grad(Wm)
     );
 
-    return surfaceScalarField::New
+    tmp<surfaceScalarField> tFlux
     (
-        "legacyRawFlux_" + Y[i].name(),
+        surfaceScalarField::New
         (
-            fvc::interpolate(this->alpha()*tRaw())
-          & Y[i].mesh().Sf()
-        )/Y[i].mesh().magSf()
+            "legacyRawFlux_" + Y[i].name(),
+            (
+                fvc::interpolate(this->alpha()*tRaw())
+              & Y[i].mesh().Sf()
+            )/Y[i].mesh().magSf()
+        )
     );
+
+    const tmp<surfaceScalarField> tThermal=thermalRawFlux(i);
+    tFlux.ref() += tThermal();
+    return tFlux;
 }
 
 
@@ -253,6 +502,10 @@ legacyMixtureAverageFourier
     TopoChangeableMeshObject(*this),
     DFuncs_(this->thermo().species().size()),
     legacyThermalDiffusionMode_("off"),
+    thermalDiffH_(),
+    thermalDiffH2_(),
+    HIndex_(-1),
+    H2Index_(-1),
     Dm_(),
     sumRawFlux_()
 {
@@ -278,15 +531,7 @@ bool legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::read()
         "off"
     );
 
-    if (legacyThermalDiffusionMode_ != "off")
-    {
-        FatalIOErrorInFunction(coeffDict)
-            << "D2 candidate-1 supports legacyThermalDiffusionMode off only. "
-            << "The published OF8 H/H2 Soret implementation contains an "
-            << "ambiguous TDRatio_H/TDRatio_H2 assignment and is being "
-            << "qualified separately rather than silently changed."
-            << exit(FatalIOError);
-    }
+    readLegacyThermalDiffusionCoeffs(coeffDict);
 
     DFuncs_.setSize(species.size());
 
@@ -458,11 +703,15 @@ legacyMixtureAverageFourier<BasicThermophysicalTransportModel>::divj
         )/Yi.mesh().magSf()
     );
 
+    const tmp<surfaceScalarField> tThermal = thermalRawFlux
+    (
+        this->thermo().specieIndex(Yi)
+    );
     const surfaceScalarField& sumRaw = sumRawFlux();
     const surfaceScalarField jCorrection
     (
         "legacyJCorrection_" + Yi.name(),
-       -mwFlux + fvc::interpolate(Yi)*sumRaw
+       -mwFlux - tThermal() + fvc::interpolate(Yi)*sumRaw
     );
 
     tDivj.ref() += fvc::div(jCorrection*Yi.mesh().magSf());

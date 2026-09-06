@@ -553,6 +553,44 @@ Foam::planarMultiDirRefinement::planarMultiDirRefinement
 Foam::planarMultiDirRefinement::planarMultiDirRefinement
 (
     polyMesh& mesh,
+    undoableMeshCutter& cutter,
+    const labelList& cellLabels,
+    const dictionary& dict,
+    const dictionary& coordinatesDict
+)
+:
+    cellLabels_(cellLabels),
+    addedCells_(mesh.nCells())
+{
+    Switch writeMesh(dict.lookupOrDefault("writeMesh", false));
+
+    directions cellDirections(mesh, coordinatesDict);
+
+    Switch pureGeomCut(dict.lookupOrDefault("geometricCut", false));
+    autoPtr<cellLooper> cellWalker(nullptr);
+    if (pureGeomCut)
+    {
+        cellWalker.reset(new geomCellLooper(mesh));
+    }
+    else
+    {
+        cellWalker.reset(new hexCellLooper(mesh));
+    }
+
+    refineAllDirs
+    (
+        mesh,
+        cellDirections,
+        cellWalker(),
+        cutter,
+        writeMesh
+    );
+}
+
+
+Foam::planarMultiDirRefinement::planarMultiDirRefinement
+(
+    polyMesh& mesh,
     undoableMeshCutter& cutter,     // actual mesh modifier
     const cellLooper& cellWalker,   // how to cut a single cell with
                                     // a plane

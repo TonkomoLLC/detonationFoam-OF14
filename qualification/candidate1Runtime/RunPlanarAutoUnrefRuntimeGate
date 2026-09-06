@@ -1,0 +1,120 @@
+#!/bin/bash
+set -euo pipefail
+HERE=$(cd "$(dirname "$0")" && pwd)
+ROOT=$(cd "$HERE/../.." && pwd)
+APPDIR="$HERE/applications/planarRefinerQualification"
+RESULTS="$HERE/results"
+mkdir -p "$RESULTS"
+
+if [ "${WM_PROJECT_VERSION:-}" != "14" ]; then
+    echo "ERROR: source OpenFOAM Foundation 14 first (WM_PROJECT_VERSION=${WM_PROJECT_VERSION:-unset})" >&2
+    exit 2
+fi
+
+python3 "$HERE/VerifyRuntimeGateSource.py"
+"$ROOT/AllwmakeAMR" 2>&1 | tee "$RESULTS/log.AllwmakeAMR"
+(
+  cd "$APPDIR"
+  wmake
+) 2>&1 | tee "$RESULTS/log.planarRefinerQualification.wmake"
+
+run_serial () {
+    local name=$1 expected=$2
+    local src="$HERE/cases/$name"
+    local run="$RESULTS/$name"
+    rm -rf "$run"
+    cp -a "$src" "$run"
+    (
+      cd "$run"
+      blockMesh > log.blockMesh 2>&1
+      checkMesh > log.checkMesh.base 2>&1
+      planarRefinerQualification > log.planarCycle 2>&1
+      checkMesh -time 1 > log.checkMesh.refined1 2>&1
+      checkMesh -time 2 > log.checkMesh.coarsened1 2>&1
+      checkMesh -time 3 > log.checkMesh.refined2 2>&1
+      checkMesh -time 4 > log.checkMesh.final 2>&1
+      python3 "$HERE/AnalyzePlanarCycle.py" log.planarCycle --expected "$expected" | tee analysis.txt
+      grep -q 'Mesh OK' log.checkMesh.base
+      grep -q 'Mesh OK' log.checkMesh.refined1
+      grep -q 'Mesh OK' log.checkMesh.coarsened1
+      grep -q 'Mesh OK' log.checkMesh.refined2
+      grep -q 'Mesh OK' log.checkMesh.final
+    )
+    echo "PASS: $name serial cycle and all checkMesh gates"
+}
+
+run_serial slabUniform   4800,1200,4800,1200
+run_serial slabLocalized 2352,1200,2352,1200
+run_serial wedgeUniform  6400,1600,6400,1600
+
+# Fixed-decomposition MPI2. Candidate 1 intentionally does NOT exercise
+# runtime redistribution while reversible ancestry is active.
+MPI_RUN="$RESULTS/slabUniformMPI2"
+rm -rf "$MPI_RUN"
+cp -a "$HERE/cases/slabUniform" "$MPI_RUN"
+(
+  cd "$MPI_RUN"
+  blockMesh > log.blockMesh 2>&1
+  decomposePar > log.decomposePar 2>&1
+  if command -v mpirun >/dev/null 2>&1; then
+      mpirun -np 2 planarRefinerQualification -parallel > log.planarCycle 2>&1
+  else
+      echo 'ERROR: mpirun not found' >&2; exit 3
+  fi
+  python3 "$HERE/AnalyzePlanarCycle.py" log.planarCycle --expected 4800,1200,4800,1200 | tee analysis.txt
+  mpirun -np 2 checkMesh -parallel -time 4 > log.checkMesh.final 2>&1
+  grep -q 'Mesh OK' log.checkMesh.final
+)
+echo "PASS: slabUniform MPI2 fixed-decomposition reversible cycle"
+
+# Intentional negative safety gate: restart from time 1 contains active
+# reversible split history and must be rejected by Candidate 1.
+NEG="$RESULTS/restartActiveHistoryRefusal"
+rm -rf "$NEG"
+cp -a "$RESULTS/slabUniform" "$NEG"
+foamDictionary "$NEG/system/controlDict" -entry startFrom -set startTime >/dev/null
+foamDictionary "$NEG/system/controlDict" -entry startTime -set 1 >/dev/null
+foamDictionary "$NEG/system/controlDict" -entry endTime -set 2 >/dev/null
+set +e
+(
+  cd "$NEG"
+  planarRefinerQualification > log.restart 2>&1
+)
+rc=$?
+set -e
+if [ "$rc" -eq 0 ]; then
+    echo "FAIL: active-history restart unexpectedly succeeded" >&2
+    exit 4
+fi
+grep -q 'does not serialize undoableMeshCutter history' "$NEG/log.restart"
+echo "PASS: active reversible-history restart is intentionally refused"
+
+# Positive restart gate from fully coarsened time 4: no reversible cuts remain,
+# so Candidate 1 may restart safely and refine again at the next odd time index.
+POS="$RESULTS/restartFullyCoarsened"
+rm -rf "$POS"
+cp -a "$RESULTS/slabUniform" "$POS"
+foamDictionary "$POS/system/controlDict" -entry startFrom -set startTime >/dev/null
+foamDictionary "$POS/system/controlDict" -entry startTime -set 4 >/dev/null
+foamDictionary "$POS/system/controlDict" -entry endTime -set 5 >/dev/null
+(
+  cd "$POS"
+  planarRefinerQualification > log.restart 2>&1
+)
+grep -q 'QUAL_END' "$POS/log.restart"
+grep -q 'cellsAfter=4800' "$POS/log.restart"
+echo "PASS: restart from fully coarsened state and re-refinement"
+
+cat > "$RESULTS/RUNTIME_GATE_SUMMARY.txt" <<'EOS'
+PASS: uniform slab 1200->4800->1200->4800->1200
+PASS: localized slab 1200->2352->1200->2352->1200
+PASS: annular wedge 1600->6400->1600->6400->1600
+PASS: MPI2 fixed-decomposition reversible slab cycle
+PASS: active-history restart intentionally refused
+PASS: fully-coarsened restart accepted and can re-refine
+EOS
+
+echo "======================================================================"
+echo "Candidate 1 planar automatic-unrefinement runtime gate: PASSED"
+echo "Results: $RESULTS"
+echo "======================================================================"

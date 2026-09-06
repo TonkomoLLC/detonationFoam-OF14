@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      solverTypeProperties;
+}
+
+solverType              NS_Sutherland;
+
+// Stop early once the pressure front reaches 0.70 mm; this keeps the smoke
+// test laptop-sized while allowing the ignition zone to burn/coarsen.
+SW_position_limit       0.00070;
+shockDetectionPressure  111325;
+stopAtShockPosition     true;

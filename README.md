@@ -1,18 +1,30 @@
-# detonationFoam for OpenFOAM Foundation 14 - v1.0.0
+# detonationFoam for OpenFOAM Foundation 14 - v1.1.0
 
-This package is the released OpenFOAM Foundation 14 port of the OpenFOAM 8 `detonationFoam` code line. The detonation solver is delivered as the modular `foamRun` solver module `detonationFluid`.
+This package is the OpenFOAM Foundation 14 port of the OpenFOAM 8
+`detonationFoam` code line. The reacting density-based solver is delivered as
+the modular `foamRun` solver module `detonationFluid`.
 
-# Important
+Version 1.1.0 adds two opt-in capabilities that were requested after v1.0.0:
 
-This was largely a porting exercise with testing on smaller cases. Care should be taken to confirm that this works for larger cases.
+- **automatic unrefinement for the reusable 2-D/wedge `planarRefiner`**; and
+- **explicit reproduction of the published OF8 H/H2 Soret behavior** through
+  `legacyThermalDiffusionMode publishedOF8`.
 
-The 2D AMR is available as an fvModel and can be used by other non-`detonationFoam` solvers with OpenFOAM 14. 
-See below for more details.
+Both features default to **off**, so v1.0.0-style cases retain their prior
+behavior unless the new options are selected.
 
+## Important scope note
+
+This release was qualified primarily with compact laptop-friendly gates. It is
+appropriate to perform case-specific mesh/time-step sensitivity and physical
+validation before using a new mechanism, geometry, or operating condition for
+production conclusions. Long full-resolution/endurance studies remain listed
+as deferred qualification rather than being hidden behind the release label.
 
 ## Quick build
 
-Source OpenFOAM Foundation 14, then build the detonation solver and legacy transport compatibility library:
+Source OpenFOAM Foundation 14 and build the detonation solver plus legacy
+transport compatibility library:
 
 ```bash
 ./Allwmake
@@ -24,42 +36,110 @@ Run cases with:
 foamRun
 ```
 
-## Optional reusable 2-D/wedge AMR - independent of detonationFoam
+## Optional reusable 2-D/wedge AMR
 
-The reusable planar/axisymmetric AMR component is in:
+The solver-independent AMR component is in:
 
 ```text
 src/planarFvMeshTopoChangers/
 ```
 
-Its runtime type is `planarRefiner`. It is an OpenFOAM `fvMeshTopoChanger`, not an `fvModel`, and has no dependency on `detonationFluid`.
+Its runtime type is `planarRefiner`. It is an OpenFOAM
+`fvMeshTopoChanger`, not an `fvModel`, and has no dependency on
+`detonationFluid`.
 
-Build only the AMR library from the release root:
+Build only the AMR library with:
 
 ```bash
 ./AllwmakeAMR
 ```
 
-or directly:
-
-```bash
-cd src/planarFvMeshTopoChangers
-./Allwmake
-```
-
-This builds:
+This produces:
 
 ```text
 $FOAM_USER_LIBBIN/libplanarFvMeshTopoChangers.so
 ```
 
-without compiling the detonation solver.
+### Automatic unrefinement
 
-The normal `./Allwmake` path does not require or link the optional AMR library.
+Automatic coarsening is opt-in. A representative `dynamicMeshDict` block is:
+
+```text
+topoChanger
+{
+    type                         planarRefiner;
+    libs                         ("libplanarFvMeshTopoChangers.so");
+    geometry                     slab;
+    refineInterval               1;
+    field                        T;
+    lowerRefineLevel             800;
+    upperRefineLevel             4900;
+    maxCells                     200000;
+
+    automaticUnrefinement        true;
+    unrefineInterval             1;
+    lowerUnrefineLevel           700;
+    upperUnrefineLevel           5000;
+    maxRefinementLevel           1;
+    maxUnrefinementPassesPerUpdate 2;
+}
+```
+
+Coarsening uses reversible split ancestry and a hysteresis band. With
+`automaticUnrefinement true`, start from the base/unrefined mesh. Restart from
+a time containing active reversible splits and runtime mesh redistribution/load
+balancing are deliberately refused because reversible cutter ancestry is not
+serialized/distributed by this implementation. Fixed-decomposition MPI2 was
+qualified, and restart from a fully coarsened state was qualified.
+
+## Published OF8 H/H2 Soret compatibility
+
+The legacy mixture-average transport model defaults to:
+
+```text
+legacyThermalDiffusionMode off;
+```
+
+To reproduce the **published OF8 source behavior**, use:
+
+```text
+legacyThermalDiffusionMode publishedOF8;
+```
+
+This mode intentionally reproduces the OF8 assignment in which both the H and
+H2 thermal-diffusion polynomial sums accumulate into the H thermal-diffusion
+ratio while the direct H2 ratio remains zero. It is provided for
+reproducibility and must not be interpreted as a corrected modern H/H2 Soret
+model.
+
+Coefficients can be supplied in the original OF8 `constant/thermoDiff` layout
+or under `thermalDiffusionCoeffs`. Explicit H/H2 pair entries are required; the
+legacy `trandat`/`groupSpecies` coefficient-sharing shortcut is not inferred.
+
+The supplied OF8 source archive did not contain a physical `thermoDiff`
+coefficient dataset, so this release does not invent one.
+
+## Small integrated H2/O2 laptop smoke
+
+A 120-cell tutorial is included specifically to exercise the two v1.1.0
+features together:
+
+```bash
+cd tutorials/H2_O2_laptop_autoUnref_Soret_OF14
+./Allrun 2>&1 | tee log.laptopSmoke
+```
+
+The accepted qualification run refined and automatically unrefined repeatedly,
+reached a final maximum temperature of about 3582 K, and advanced the leading
+shock to 0.51 mm without a fatal error/FPE. The tutorial uses one explicitly
+**synthetic diagnostic Soret coefficient** because physical OF8 `thermoDiff`
+data were not supplied; it is an integration smoke, not quantitative Soret
+validation.
 
 ## Documentation
 
-The manuals are supplied in Markdown, Word, and PDF:
+The main solver manual and the standalone reusable-AMR manual are supplied in
+GitHub Markdown, Word, and PDF:
 
 ```text
 docs/detonationFoam_OF14_Manual.md
@@ -71,24 +151,36 @@ docs/planarRefiner_OF14_Manual.docx
 docs/planarRefiner_OF14_Manual.pdf
 ```
 
-The main manual includes theory, usage, OF8-to-OF14 migration, a capability-disposition table, native OpenFOAM substitutions, omitted/deferred capability, AMR, MPI/load balancing, restart, qualification results, limitations, and troubleshooting. OpenFOAM keywords, dictionaries/files, runtime types, paths, and shell commands are monospaced in Word/PDF and use backticks/code blocks in Markdown. Markdown mathematics uses GitHub-compatible `$...$` and `$$...$$` syntax. Word/PDF tables of contents include page numbers.
+The manuals cover theory, usage, OF8-to-OF14 case migration, capability
+classification, automatic unrefinement, published-OF8 Soret compatibility,
+parallel/restart constraints, qualification, limitations, and troubleshooting.
 
 ## Release qualification
 
-OpenFOAM 14 v1.0.0 is released after the staged A-G migration and R1 clean-build/runtime gate. See:
+The authoritative status is:
 
 ```text
 QUALIFICATION_SUMMARY.md
-qualification/POST_RELEASE_DEFERRED_QUALIFICATION.md
 ```
 
-The final R1 returned run clean-built the standalone AMR library, clean-built the full detonation/legacy-transport libraries, confirmed no runtime link dependency from `libdetonationFluidSolver.so` to `libplanarFvMeshTopoChangers.so`, and successfully returned from the packaged short `foamRun` tutorial. The only R1 failure message was a post-run checker false positive caused by matching OpenFOAM's normal `FOAM_SIGFPE` startup line; that checker is corrected in `RunReleaseQualification`.
+The v1.1.0 feature evidence is summarized in:
 
-To reproduce the compact release qualification on another OpenFOAM Foundation 14 installation:
+```text
+qualification/V1_1_AUTO_UNREF_SORET_QUALIFICATION.md
+qualification/INTEGRATED_H2_LAPTOP_SMOKE.md
+```
+
+The detailed historical runtime harnesses that produced the accepted feature
+evidence remain in `qualification/candidate1Runtime/` for reproducibility.
+
+To run the compact release audit/build/runtime smoke on another OF14
+installation:
 
 ```bash
 ./VerifyRelease
 ./RunReleaseQualification
 ```
 
-The default runtime budget is 900 s (15 minutes). Long full-resolution equivalence, formal grid/CJ convergence, endurance, and formal strong/weak scaling remain explicitly deferred post-release.
+The release qualification remains laptop-oriented; long full-resolution,
+formal convergence/CJ validation, endurance, corrected-Soret development, and
+reversible-history serialization/distribution remain explicitly deferred.

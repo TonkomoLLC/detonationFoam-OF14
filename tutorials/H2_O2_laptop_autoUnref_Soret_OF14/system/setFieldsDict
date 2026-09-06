@@ -1,0 +1,39 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+
+// OpenFOAM Foundation v14 setFields syntax.
+// (The older defaultFieldValues/regions syntax is intentionally not used.)
+defaultValues
+{
+    p   101325;
+    T   300;
+}
+
+zones
+{
+    ignitionKernel
+    {
+        type    box;
+
+        // 0.20 mm ignition kernel.
+        box     (-1 -1 -1) (0.00020 1 1);
+
+        values
+        {
+            p   2000000;
+            T   2000;
+        }
+    }
+}
